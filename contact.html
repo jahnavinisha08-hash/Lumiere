@@ -306,17 +306,26 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if (!email || !email.includes('@')) { alert('Please enter a valid email address.'); return; }
     if (!subject) { alert('Please select a subject.'); return; }
     if (!message) { alert('Please write your message.'); return; }
-    // GTM Event Tracking
-window.dataLayer = window.dataLayer || [];
-window.dataLayer.push({
-  'event': 'form_submission',
-  'formType': 'contact_form',
-  'formSubject': subject
-});
+    if (!consent) { alert('Please accept the privacy policy to proceed.'); return; }
 
-    // Show success
-    document.getElementById('formSection').style.display = 'none';
-    document.getElementById('successMsg').style.display = 'block';
+    // GTM Tracking - MUST BE BEFORE SUCCESS MESSAGE
+    try {
+      dataLayer.push({
+        'event': 'form_submit',
+        'form_name': 'contact_form',
+        'form_subject': subject
+      });
+      console.log('GTM Event Fired: form_submit');
+    } catch(e) {
+      console.error('GTM Error:', e);
+    }
+
+    // Small delay to ensure GTM fires
+    setTimeout(function() {
+      // Show success
+      document.getElementById('formSection').style.display = 'none';
+      document.getElementById('successMsg').style.display = 'block';
+    }, 100);
   }
 
   function updateCartBadge() {
