@@ -306,7 +306,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if (!email || !email.includes('@')) { alert('Please enter a valid email address.'); return; }
     if (!subject) { alert('Please select a subject.'); return; }
     if (!message) { alert('Please write your message.'); return; }
-    if (!consent) { alert('Please accept the privacy policy to proceed.'); return; }
+    // GTM Event Tracking
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({
+  'event': 'form_submission',
+  'formType': 'contact_form',
+  'formSubject': subject
+});
 
     // Show success
     document.getElementById('formSection').style.display = 'none';
